@@ -7,7 +7,7 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/kelseyhightower/envconfig"
 	"github.com/tinrab/retry"
-	"github.com/vaxxnsh/go-microservices/account"
+	"github.com/vaxxnsh/go-microservices/catalog"
 )
 
 type Config struct {
@@ -16,20 +16,18 @@ type Config struct {
 
 func main() {
 	var cfg Config
-
 	err := godotenv.Load(".env")
 	if err != nil {
 		log.Fatal(err)
 	}
-
 	err = envconfig.Process("", &cfg)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	var r account.Repository
+	var r catalog.Repository
 	retry.ForeverSleep(2*time.Second, func(_ int) (err error) {
-		r, err = account.NewPostgresRepository(cfg.DatabaseURL)
+		r, err = catalog.NewElasticRepository(cfg.DatabaseURL)
 		if err != nil {
 			log.Println(err)
 		}
@@ -38,6 +36,6 @@ func main() {
 	defer r.Close()
 
 	log.Println("Listening on port 8080...")
-	s := account.NewService(r)
-	log.Fatal(account.ListenGRPC(s, 8080))
+	s := catalog.NewService(r)
+	log.Fatal(catalog.ListenGRPC(s, 8080))
 }

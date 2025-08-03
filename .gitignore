@@ -12,6 +12,8 @@
 # Dependency directories (vendor/ for Go modules)
 vendor/
 
+*.env
+
 # IDE/editor files
 .vscode/
 .idea/

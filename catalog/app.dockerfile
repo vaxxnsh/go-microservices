@@ -6,7 +6,7 @@ WORKDIR /go/src/github.com/vaxxnsh/go-microservices
 
 COPY go.mod go.sum ./
 COPY vendor vendor
-COPY account account
+COPY catalog catalog
 
 RUN GO111MODULE=on go build -mod vendor -o /go/bin/app ./account/cmd/account
 
